@@ -1,0 +1,23 @@
+Names (and netids):
+  - Cole Ruth (rruth2)
+  - Kerry Cao (kcao5)
+
+How to run the program:
+  - Compile: `g++ lib_info.cpp -o lib_info`
+  - Run: `./lib_info <filename>`
+
+What the program does:
+  This is a program to organize a music library. First, it reads in an unsorted
+  list of each song in the music library. It organizes that information internally
+  into nested maps, and then once it has all the songs organized, it traverses the
+  nested maps to print out the music library in an organized fashion.
+
+What we learned:
+  - Cole:
+      I learned that std::map will automatically sort by key, which is very
+      helpful for this use case since it doesn't require any additional logic.
+  - Kerry:
+      This program was a great refresher for maps, likewise with Cole I also learnt that maps
+      will automatically sort by keys. It was also a good reminder for how ifstreams work,
+      particularly that you need to break out of the read loop once the file has nothing
+      left to give
