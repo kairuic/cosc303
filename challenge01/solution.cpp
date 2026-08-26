@@ -42,16 +42,22 @@ while (cin >> n >> k >> r) {
         result[i] = arr[new_index];
     }
     
+
     // Print out the rotated array
     for (int i = 0; i < n; i++) {
-        cout << result[i] << " ";
+        cout << result[i];
+        
+        // Match with output (last element should not have a space after it)
+        if (i < n - 1) {
+            cout << " ";
+        }
     }
 
     cout << endl;
 
     delete[] arr;
     delete[] result;
-    
+
 }
     return 0;
 }
