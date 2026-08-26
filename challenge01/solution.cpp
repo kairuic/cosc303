@@ -1,5 +1,12 @@
+// Kerry Cao
+// Aug 26
 // Challenge 01: Rotating Arrays; null solution
+// Given an array of integers, rotate the array to the left
+// or right based on the input direction and number of rotations.
 
+// I used Geek for Geeks for the toupper function and 
+// #include <cctype> header file. 
+// https://www.geeksforgeeks.org/cpp/toupper-in-cpp/
 
 
 #include <iostream>
