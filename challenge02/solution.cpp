@@ -9,6 +9,10 @@
 // the adjacent numbers, it finds the closest pairs of numbers 
 // and outputs them.
 
+// Resources: https://www.geeksforgeeks.org/cpp/difference-between-int-and-size_t-in-cpp/
+// Wasn't compiling because I was comparing a unsigned int with a signed int
+// On line 56
+
 #include <algorithm>
 #include <climits>
 #include <cstdlib>
