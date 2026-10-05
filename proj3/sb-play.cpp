@@ -1,8 +1,8 @@
-//Project 3B: Superball Play
-//Name: Kerry Cao
+// Project 3B: Superball Play
+// Name: Kerry Cao
 
-//Brief description: Reads in a Superball board and prints one move
-//for sb-player to make.
+//Reads in a Superball board and prints one move
+//SWAP or SCORE for sb-player to make.
 
 #include <cstdio>
 #include <cstdlib>
@@ -129,8 +129,7 @@ void Superball::components(const vector <int> &b, vector <int> &rep, vector <int
 }
 
 //Gives a board a score so I can compare swaps. Bigger groups of better
-//colors are worth more, and groups touching a goal are worth extra since
-//those are the ones I can actually score.
+//colors are worth more.
 
 double Superball::evaluate(const vector <int> &b)
 {
@@ -141,12 +140,10 @@ double Superball::evaluate(const vector <int> &b)
   components(b, rep, size, hasgoal);
 
   for (k = 0; k < r*c; k++) {
-    if (rep[k] != k) continue;            // only count each set once
+    if (rep[k] != k) continue; //only count each set once
     s = size[k];
     if (s < 2) continue;
-    double w = (double) s * s * colors[b[k]];
-    if (hasgoal[k]) w *= (s >= mss) ? 2.0 : 1.5;
-    v += w;
+    v += (double) s * s * colors[b[k]];
   }
   return v;
 }
@@ -169,9 +166,9 @@ void Superball::play()
     }
   }
 
-  //score if the board is getting full, otherwise keep building groups
+  //score it if I can, otherwise look for a swap
 
-  if (bestcell != -1 && empty < 10) {
+  if (bestcell != -1) {
     printf("SCORE %d %d\n", bestcell / c, bestcell % c);
     return;
   }
@@ -193,12 +190,6 @@ void Superball::play()
     }
   }
 
-  //score if there's no useful swap or not enough empty cells to swap
-
-  if (bestcell != -1 && (bi == -1 || empty < 5)) {
-    printf("SCORE %d %d\n", bestcell / c, bestcell % c);
-    return;
-  }
 
   //no good move left, so just swap any two cells so the game can end
 
