@@ -2,106 +2,99 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 #include <queue>
-#include <string>
-#include <limits>
+#include <climits>
 #include <algorithm>
-#include <functional>
-#include <utility>
 
 using namespace std;
 
 // Main Execution
 
 int main(int argc, char *argv[]) {
-    (void)argc;
-    (void)argv;
- 
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
- 
-    int tiles_n;
-    if (!(cin >> tiles_n)) return 1;
- 
-    // Tile symbol -> cost lookup (indexed by char value)
-    vector<int> tile_cost(256, -1);
-    for (int i = 0; i < tiles_n; i++) {
-        string name;
+    int numTiles;
+    cin >> numTiles;
+
+    // tile symbol -> cost
+    map<char, int> tileCost;
+    for (int i = 0; i < numTiles; i++) {
+        char name;
         int cost;
         cin >> name >> cost;
-        tile_cost[(unsigned char)name[0]] = cost;
+        tileCost[name] = cost;
     }
- 
+
     int rows, cols;
     cin >> rows >> cols;
- 
-    // Store each cell's cost directly; vertex id = r * cols + c
-    int V = rows * cols;
-    vector<int> cell_cost(V);
-    for (int i = 0; i < V; i++) {
-        string sym;
-        cin >> sym;
-        cell_cost[i] = tile_cost[(unsigned char)sym[0]];
+
+    // cost of each cell
+    vector<vector<int>> grid(rows, vector<int>(cols));
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            char t;
+            cin >> t;
+            grid[r][c] = tileCost[t];
+        }
     }
- 
-    int sr, sc, er, ec;
-    cin >> sr >> sc >> er >> ec;
-    int src = sr * cols + sc;
-    int dst = er * cols + ec;
- 
-    const long long INF = numeric_limits<long long>::max();
-    vector<long long> dist(V, INF);   // tentative distances
-    vector<int> prev(V, -1);          // predecessor for path reconstruction
-    vector<char> done(V, 0);          // finalized vertices
- 
-    // Min-heap of (distance, vertex); stale entries skipped (lazy deletion)
-    using Item = pair<long long, int>;
-    priority_queue<Item, vector<Item>, greater<Item>> pq;
- 
-    dist[src] = 0;
-    pq.push({0, src});
- 
-    const int dr[4] = {-1, 1, 0, 0};
-    const int dc[4] = {0, 0, -1, 1};
- 
+
+    int startR, startC, endR, endC;
+    cin >> startR >> startC >> endR >> endC;
+
+    // each cell is a vertex: id = row * cols + col
+    int n = rows * cols;
+    vector<int> dist(n, INT_MAX);
+    vector<int> prev(n, -1);
+    vector<bool> visited(n, false);
+
+    // min heap of (distance, vertex)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+    int start = startR * cols + startC;
+    int end = endR * cols + endC;
+    dist[start] = 0;
+    pq.push(make_pair(0, start));
+
+    int dr[4] = {-1, 1, 0, 0};
+    int dc[4] = {0, 0, -1, 1};
+
     while (!pq.empty()) {
-        long long d = pq.top().first;
         int u = pq.top().second;
         pq.pop();
-        if (done[u]) continue;
-        done[u] = 1;
-        if (u == dst) break;   // destination finalized, no need to continue
- 
-        int r = u / cols, c = u % cols;
-        long long w = cell_cost[u];  // cost of leaving u
- 
-        // Neighbors generated on the fly (no explicit edge list)
-        for (int k = 0; k < 4; k++) {
-            int nr = r + dr[k], nc = c + dc[k];
+
+        if (visited[u]) continue;
+        visited[u] = true;
+
+        int r = u / cols;
+        int c = u % cols;
+
+        // check up, down, left, right
+        for (int i = 0; i < 4; i++) {
+            int nr = r + dr[i];
+            int nc = c + dc[i];
             if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+
             int v = nr * cols + nc;
-            if (done[v]) continue;
-            long long nd = d + w;
-            if (nd < dist[v]) {
-                dist[v] = nd;
+            // cost of leaving the current tile
+            int newDist = dist[u] + grid[r][c];
+            if (newDist < dist[v]) {
+                dist[v] = newDist;
                 prev[v] = u;
-                pq.push({nd, v});
+                pq.push(make_pair(newDist, v));
             }
         }
     }
- 
-    // Reconstruct path: walk predecessors from destination, then reverse
+
+    // rebuild path from end back to start
     vector<int> path;
-    for (int v = dst; v != -1; v = prev[v]) path.push_back(v);
-    reverse(path.begin(), path.end());
- 
-    string out;
-    out.reserve(path.size() * 12 + 16);
-    out += to_string(dist[dst]) + "\n";
-    for (int v : path) {
-        out += to_string(v / cols) + " " + to_string(v % cols) + "\n";
+    for (int v = end; v != -1; v = prev[v]) {
+        path.push_back(v);
     }
-    cout << out;
+    reverse(path.begin(), path.end());
+
+    cout << dist[end] << endl;
+    for (int i = 0; i < (int)path.size(); i++) {
+        cout << path[i] / cols << " " << path[i] % cols << endl;
+    }
+
     return 0;
 }
-
