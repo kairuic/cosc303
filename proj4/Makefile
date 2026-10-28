@@ -17,13 +17,13 @@ test:		test-output test-memory
 
 test-output:	src/dijkstras
 	@echo Testing output 0...
-	@./src/dijkstras < data/input0.txt | ~semrich/Public/checkproj4 data/input0.txt data/output0.txt
+	@./src/dijkstras < data/input0.txt | python3 validate_path.py data/input0.txt
 	@echo Testing output 1...
-	@./src/dijkstras < data/input1.txt | ~semrich/Public/checkproj4 data/input1.txt data/output1.txt
+	@./src/dijkstras < data/input1.txt | python3 validate_path.py data/input1.txt
 	@echo Testing output 2...
-	@./src/dijkstras < data/input2.txt | ~semrich/Public/checkproj4 data/input2.txt data/output2.txt
+	@./src/dijkstras < data/input2.txt | python3 validate_path.py data/input2.txt
 	@echo Testing output 3...
-	@./src/dijkstras < data/input3.txt | ~semrich/Public/checkproj4 data/input3.txt data/output3.txt
+	@./src/dijkstras < data/input3.txt | python3 validate_path.py data/input3.txt
 
 test-memory:	src/dijkstras
 	@echo Testing memory...
