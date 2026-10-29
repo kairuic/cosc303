@@ -1,0 +1,16 @@
+Individual Reflection: Kerry Cao
+
+Contribution
+I worked solo and did everything
+
+Graph Representation
+Each cell on the map is a vertex, numbered row * cols + col. A cell’s neighbors are the cells right above, below, left, and right of it, as long as they’re on the map. Moving out of a cell costs that cell’s tile cost. I didn’t store the edges, I just found the neighbors when I needed them.
+
+Data Structures
+I used a vector to hold the current best distance to each cell, a vector to remember which cell I came from so I could rebuild the path, and a vector to mark cells that were already done. To pick the next cell, I used a priority queue that always gives the cell with the smallest distance, and I skipped cells that were already done.
+
+Complexity
+The time is O((V + E) log V) and the space is O(V + E). For an N x N map, there are N^2 cells and at most 4N^2 edges, so the time is O(N^2 log N) and the space is O(N^2). The log comes from the priority queue, and finding neighbors when needed means I don’t store any edges.
+
+Scaling
+Going from N = 500 to 1000, the time went from 0.14 s to 0.57 s, about 4 times longer, and memory also grew about 4 times. That’s what I expected, since the map has 4 times as many cells. For N = 100 and smaller, everything ran in under 0.01 s and memory stayed the same, because the program was too fast for the timer to measure.
