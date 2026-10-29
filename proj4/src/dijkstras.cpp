@@ -1,4 +1,9 @@
-// dijsktras.cpp
+// Project 4: dijkstras.cpp
+// Name: Kerry Cao
+
+// Reads a tile map, its tile costs, and start/end positions then uses
+// Dijkstra's algorithm to find the minimum-cost path. It then prints the total
+// Path from start to end, followed by each cell on the path.
 
 #include <iostream>
 #include <vector>
