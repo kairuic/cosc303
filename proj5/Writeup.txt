@@ -1,0 +1,38 @@
+CS303 Project 5: Letter Dice
+Name: Kerry Cao
+
+Design Decisions
+
+- The graph is stored as adjacency lists. Each edge keeps its destination, remaining
+  capacity, and the index of its reverse edge, so residual updates are O(1) and BFS
+  can follow reverse edges to undo earlier assignments.
+- Nodes: 0 = source, 1..D = dice, then one node per letter, then the sink. All
+  capacities are 1.
+- Each die gets a letter lookup table built once at the start, so checking whether
+  a die has a letter is O(1). Duplicate letters on a die only make one edge.
+- The graph is rebuilt for every word, so no flow carries over between words.
+- Max flow uses Edmonds-Karp (BFS for each augmenting path). If the flow equals the
+  word length, die-to-letter edges with 0 capacity left give the assignment.
+
+COMPLEXITY ANALYSIS
+
+Variables: D = number of dice, S = total sides across all dice, L = word length,
+W = number of words, Lmax = longest word length. Each word graph has V = D + L + 2
+nodes and E = O(D*L) edges.
+
+1. Constructing the graph for one word
+   Time: O(D*L), checking every die against every letter with O(1) lookups.
+   Space: O(D*L) for the adjacency lists.
+
+2. Finding the maximum flow for one word
+   Each BFS is O(V + E) = O(D*L). The flow is at most min(D, L), so there are at
+   most min(D, L) + 1 BFS rounds. Time: O(min(D, L) * D * L). Extra space: O(V).
+
+3. Processing all words
+   Time: O(S + W * D^2 * Lmax), with reading the dice costing O(S) and max flow
+   dominating each word. Space: O(S + D*Lmax), since only one word graph exists
+   at a time.
+
+Data structures: adjacency lists keep BFS at O(V + E) instead of O(V^2) for a
+matrix. Storing reverse edge indexes avoids searching for them. The letter lookup
+tables keep graph construction at O(D*L) instead of O(S*L).
